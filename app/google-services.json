@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "214243782399",
+    "project_id": "happyworkout-f638d",
+    "storage_bucket": "happyworkout-f638d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:214243782399:android:1235dc08bdcbb08ae626ca",
+        "android_client_info": {
+          "package_name": "com.happy.workout"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgwcEDyac7TT36Fo7K86LYBaFnA-_LZn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

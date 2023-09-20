@@ -1,0 +1,12 @@
+export { default as IcBackArrow } from './ic_back_arrow.svg';
+export { default as IcSearch } from './ic_search.svg';
+export { default as IcCheck } from './ic_check.svg';
+export { default as IcCheckBrown } from './ic_check_brown.svg';
+export { default as IcRoundStarFilled } from './ic_round_star_filled.svg';
+export { default as IcRoundStar } from './ic_round_star.svg';
+export { default as IcPlus } from './ic_plus.svg';
+export { default as IcClose } from './ic_close.svg';
+export { default as IcMic } from './ic_mic.svg';
+export { default as IcCamera } from './ic_camera.svg';
+export { default as IcImageDelete } from './ic_image_delete.svg';
+export { default as IcDelete } from './ic_delete.svg';

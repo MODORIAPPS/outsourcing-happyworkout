@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/page_home"
+        android:enabled="true"
+        android:icon="@drawable/nav_home"
+        android:title="홈"/>
+
+    <item
+        android:id="@+id/page_calendar"
+        android:enabled="true"
+        android:icon="@drawable/nav_calendar"
+        android:title="기록하기"/>
+
+    <item
+        android:id="@+id/page_chat"
+        android:enabled="true"
+        android:icon="@drawable/nav_chat"
+        android:title="채팅"/>
+
+    <item
+        android:id="@+id/page_mypage"
+        android:enabled="true"
+        android:icon="@drawable/nav_person"
+        android:title="프로필"/>
+
+</menu>
