@@ -4,6 +4,7 @@ import Chat from '@/pages/chat';
 import React from 'react';
 import { Route, Routes } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
+import AuthProvider from '@/context/AuthProvider';
 
 const COMMON_ROUTER = [
     {
@@ -12,7 +13,9 @@ const COMMON_ROUTER = [
     },
     {
         path: ROUTE_URLS.chat,
-        element: <Chat />,
+        element: <AuthProvider>
+            <Chat />
+        </AuthProvider>,
     },
 ];
 
