@@ -1,93 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_gravity="center"
     tools:context=".ChatFragment">
 
-    <LinearLayout
-        android:id="@+id/topBar"
+    <WebView
+        android:id="@+id/chatWebView"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/main_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:text="산책갈래"
-                android:textColor="@color/primary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <TextView
-        android:visibility="invisible"
-        android:id="@+id/myLocationTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:text="광진구 사람들과 이야기하기" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="현재 사용가능한 채팅방"
-        android:textSize="16sp" />
+        android:layout_height="match_parent" />
 
     <LinearLayout
-        android:visibility="invisible"
-        android:id="@+id/chatroomItem"
-        android:layout_marginTop="24dp"
+        android:id="@+id/animContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="12dp"
-        android:background="@drawable/chatroom_bg"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:cardCornerRadius="12dp">
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="200dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/anim_location_find" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/main_icon" />
-        </androidx.cardview.widget.CardView>
-
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/chatroomNameTextView"
-                android:text="광진구 대화해요!"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:layout_marginStart="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:text="주변 3km이내의 사람들을 찾고 있습니다"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,6 +39,8 @@ class LoginActivity : AppCompatActivity() {
         ViewModelProvider(this.application as HappyWorkout)[UserViewModel::class.java]
     }
 
+    val firestore = FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -134,6 +136,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        setSupportActionBar(binding.toolBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         binding.emailLoginBtn.setOnClickListener {
             binding.loginButtonContainer.visibility = ViewGroup.GONE
             binding.emailLoginContainer.visibility = ViewGroup.VISIBLE
@@ -157,19 +163,26 @@ class LoginActivity : AppCompatActivity() {
         }
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
-                    val user = auth.currentUser
-                    val mUser = User(
-                        user?.uid ?: "",
-                        user?.uid.toString(),
-                        user?.email.toString(),
-                        Timestamp.now(),
-                        Timestamp.now(),
-                        null
-                    )
-                    userViewModel.user.postValue(mUser)
-                    AuthManager.saveLoginMethod(this, AuthManager.LOGIN_METHOD_EMAIL)
+                    firestore.collection("users")
+                        .whereEqualTo("firebaseUid", auth.currentUser!!.uid)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            if (documents.size() > 0) {
+                                userViewModel.user.value = User(
+                                    documents.documents[0].getString("firebaseUid").toString(),
+                                    documents.documents[0].getString("uid").toString(),
+                                    documents.documents[0].getString("nickname").toString(),
+                                    Timestamp.now(),
+                                    Timestamp.now(),
+                                    documents.documents[0].getString("profileImageUrl").toString(),
+                                )
+                                AuthManager.saveLoginMethod(
+                                    this,
+                                    AuthManager.LOGIN_METHOD_EMAIL
+                                )
+                            }
+                        }
                 } else {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(
@@ -179,5 +192,10 @@ class LoginActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }

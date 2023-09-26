@@ -32,7 +32,7 @@ class AdsBannerViewPagerAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.adImageView)
 
-        fun bind(imageUrl: String) {
+        fun bind(imageUrl: Int) {
             Glide.with(context).load(imageUrl).into(imageView)
         }
     }

@@ -15,10 +15,15 @@ const useMe = (firebaseUid: string) => {
             const userRef = doc(db, "users", firebaseUid);
             setLoading(true);
             const userDoc = await getDoc(userRef);
-            if (userDoc.exists()) {
-                const user = userDoc.data() as UserDTO;
-                setUser(user);
+            if(!userDoc.exists()) {
+                (window as any).HappyWorkout.close();
+                (window as any).HappyWorkout.showToast("로그인이 필요합니다.");
+                setLoading(false);
+                return
             }
+
+            const user = userDoc.data() as UserDTO;
+            setUser(user);
             setLoading(false);
         })();
     }, [firebaseUid])

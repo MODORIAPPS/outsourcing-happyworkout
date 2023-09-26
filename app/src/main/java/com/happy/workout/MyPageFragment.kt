@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
@@ -39,7 +40,14 @@ class MyPageFragment : Fragment() {
         }
 
         binding.deleteUserButton.setOnClickListener {
-            deleteUser()
+            AlertDialog.Builder(requireContext())
+                .setTitle("회원탈퇴")
+                .setMessage("정말 회원탈퇴를 하시겠습니까?")
+                .setPositiveButton("네") { _, _ ->
+                    deleteUser()
+                }
+                .setNegativeButton("아니오") { _, _ -> }
+                .show()
         }
 
         binding.privacyItem.setOnClickListener {
@@ -49,6 +57,7 @@ class MyPageFragment : Fragment() {
         userViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 Log.d("MyPageFragment", "user: $user")
+                binding.profileSettingButton.visibility = View.VISIBLE
                 binding.deleteUserButton.visibility = View.VISIBLE
                 binding.loginButton.visibility = View.GONE
                 binding.profileContainer.visibility = View.VISIBLE
@@ -58,6 +67,7 @@ class MyPageFragment : Fragment() {
                     .circleCrop()
                     .into(binding.profileImageView)
             } else {
+                binding.profileSettingButton.visibility = View.INVISIBLE
                 binding.loginButton.visibility = View.VISIBLE
                 binding.profileContainer.visibility = View.GONE
                 binding.nicknameTextView.text = ""
@@ -65,21 +75,28 @@ class MyPageFragment : Fragment() {
         }
 
         binding.logoutItem.setOnClickListener {
-            val method = AuthManager.loadLoginMethod(requireContext())
-            if (method == "email") {
-                Firebase.auth.signOut()
-                return@setOnClickListener
-            }
-            userViewModel.user.postValue(null)
-            AuthManager.clearLoginMethod(requireContext())
+            AlertDialog.Builder(requireContext())
+                .setTitle("로그아웃")
+                .setMessage("정말 로그아웃을 하시겠습니까?")
+                .setPositiveButton("네") { _, _ ->
+                    val method = AuthManager.loadLoginMethod(requireContext())
+                    if (method == "email") {
+                        Firebase.auth.signOut()
+                        return@setPositiveButton
+                    }
+                    userViewModel.user.postValue(null)
+                    AuthManager.clearLoginMethod(requireContext())
+                }
+                .setNegativeButton("아니오") { _, _ -> }
+                .show()
         }
 
         return binding.root
     }
 
-    private fun deleteUser () {
+    private fun deleteUser() {
         val method = AuthManager.loadLoginMethod(requireContext())
-        if(method == "email"){
+        if (method == "email") {
             val user = Firebase.auth.currentUser
             user?.delete()
                 ?.addOnCompleteListener { task ->
@@ -88,17 +105,17 @@ class MyPageFragment : Fragment() {
                         userViewModel.user.postValue(null)
                     }
                 }
-        }else {
+        } else {
             // delete user from firebase firestore
-            Firebase.firestore.collection("users").document(userViewModel.user.value!!.uid).delete().addOnCompleteListener {
-                Toast.makeText(requireContext(), "회원탈퇴가 완료되었습니다", Toast.LENGTH_SHORT).show()
-                userViewModel.user.postValue(null)
-            }
+            Firebase.firestore.collection("users").document(userViewModel.user.value!!.uid).delete()
+                .addOnCompleteListener {
+                    Toast.makeText(requireContext(), "회원탈퇴가 완료되었습니다", Toast.LENGTH_SHORT).show()
+                    userViewModel.user.postValue(null)
+                }
         }
 
 
         AuthManager.clearLoginMethod(requireContext())
-
     }
 
 }

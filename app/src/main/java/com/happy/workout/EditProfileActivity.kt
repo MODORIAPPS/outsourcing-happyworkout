@@ -29,10 +29,13 @@ class EditProfileActivity : AppCompatActivity() {
     private val storageReference = FirebaseStorage.getInstance().reference
     private val firestore = FirebaseFirestore.getInstance()
 
+    private var profileImageUrl = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        userViewModel = ViewModelProvider(this.application as HappyWorkout)[UserViewModel::class.java]
+        userViewModel =
+            ViewModelProvider(this.application as HappyWorkout)[UserViewModel::class.java]
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -52,6 +55,10 @@ class EditProfileActivity : AppCompatActivity() {
             binding.saveButton.text = "저장중..."
             saveProfile()
         }
+
+        setSupportActionBar(binding.toolBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun openGallery() {
@@ -66,9 +73,16 @@ class EditProfileActivity : AppCompatActivity() {
         if (requestCode == IMAGE_PICK_REQUEST && resultCode == RESULT_OK) {
             data?.data?.let {
                 selectedImageUri = it
-                Glide.with(this)
-                    .load(selectedImageUri)
-                    .into(binding.profileImageView)
+                val imageRef = storageReference.child("record_images/${UUID.randomUUID()}")
+                imageRef.putFile(selectedImageUri)
+                    .addOnSuccessListener {
+                        imageRef.downloadUrl.addOnSuccessListener { imageUrl ->
+                            profileImageUrl = imageUrl.toString()
+                            Glide.with(this)
+                                .load(selectedImageUri)
+                                .into(binding.profileImageView)
+                        }
+                    }
             }
         }
     }
@@ -78,45 +92,36 @@ class EditProfileActivity : AppCompatActivity() {
         val firebaseUid = userViewModel.user.value?.firebaseUid ?: ""
         val userId = userViewModel.user.value?.uid ?: ""
 
-        val usersRef = firestore.collection("users").document(firebaseUid)
+        val usersRef = firestore.collection("users").document(userId)
         val nickname = binding.nicknameEditText.text.toString()
 
-        if (selectedImageUri != null) {
-            // 이미지를 Firebase Storage에 업로드
-            val imageRef = storageReference.child("record_images/${UUID.randomUUID()}")
-            imageRef.putFile(selectedImageUri)
-                .addOnSuccessListener { taskSnapshot ->
+        val updates = hashMapOf<String, Any>(
+            "nickname" to nickname,
+            "profileImageUrl" to profileImageUrl,
+        )
+        usersRef
+            .update(updates)
+            .addOnSuccessListener {
+                val user = User(
+                    firebaseUid,
+                    userId,
+                    nickname,
+                    Timestamp.now(),
+                    Timestamp.now(),
+                    profileImageUrl
+                )
+                userViewModel.user.postValue(user)
+                Toast.makeText(this, "프로필이 저장되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Log.d("EditProfileActivity", "Error writing document", it)
+                Toast.makeText(this, "프로필 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+    }
 
-                    imageRef.downloadUrl.addOnSuccessListener { imageUrl ->
-                        val updates = hashMapOf<String, Any>(
-                            "nickname" to nickname,
-                            "profileImageUrl" to imageUrl.toString(),
-                        )
-                        usersRef
-                            .update(updates)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "프로필이 저장되었습니다.", Toast.LENGTH_SHORT).show()
-                                val user = User(
-                                    firebaseUid,
-                                    userId,
-                                    nickname,
-                                    Timestamp.now(),
-                                    Timestamp.now(),
-                                    imageUrl.toString()
-                                )
-                                userViewModel.user.postValue(user)
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "프로필 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                            }
-                    }
-
-                }
-                .addOnFailureListener {
-                    // 이미지 업로드 실패
-                    Toast.makeText(this, "이미지 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
-                }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     companion object {

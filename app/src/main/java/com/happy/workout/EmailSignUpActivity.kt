@@ -52,7 +52,6 @@ class EmailSignUpActivity : AppCompatActivity() {
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
             val passwordConfirm = binding.passwordConfirmEditText.text.toString()
-            var profileImageUrl = ""
 
             if (password != passwordConfirm) {
                 // 비밀번호가 일치하지 않는 경우
@@ -125,6 +124,7 @@ class EmailSignUpActivity : AppCompatActivity() {
                 imageRef.putFile(selectedImageUri)
                     .addOnSuccessListener { taskSnapshot ->
                         imageRef.downloadUrl.addOnSuccessListener { imageUrl ->
+                            profileImageUrl = imageUrl.toString()
                             Glide.with(this)
                                 .load(imageUrl)
                                 .into(binding.profileImageView)

@@ -1,6 +1,8 @@
 package com.happy.workout.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.happy.workout.R
+import com.happy.workout.RecordDetailActivity
 import com.happy.workout.model.AdsBannerItem
 import com.happy.workout.model.LocalRecordListItem
 import java.text.SimpleDateFormat
@@ -34,12 +37,21 @@ class LocalRecordRecyclerViewAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val recordItem = itemView.findViewById<View>(R.id.recordItem)
         private val dogImageView: ImageView = itemView.findViewById(R.id.image)
         private val title: TextView = itemView.findViewById(R.id.title)
         private val description: TextView = itemView.findViewById(R.id.description)
         private val date: TextView = itemView.findViewById(R.id.dateview)
 
         fun bind(item: LocalRecordListItem) {
+            recordItem.setOnClickListener {
+                val intent = Intent(context, RecordDetailActivity::class.java)
+                intent.putExtra("userId", item.userId)
+                intent.putExtra("date", item.date)
+                context.startActivity(intent)
+            }
+
             Glide.with(context).load(item.imageUrl).into(dogImageView)
             title.text = item.title
             description.text = item.description

@@ -37,13 +37,13 @@ class HomeFragment : Fragment() {
 
     private val items = listOf(
         AdsBannerItem(
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Siberian-husky.jpg/280px-Siberian-husky.jpg",
-            "허스키",
+            R.drawable.banner_01,
+            "배너1",
             "https://myaccount.google.com/?hl=ko&utm_source=OGB&utm_medium=act&pli=1"
         ),
         AdsBannerItem(
-            "https://media.istockphoto.com/id/1214044812/photo/mame-shibainu.jpg?s=612x612&w=0&k=20&c=QkfIZX_0-EtMjJ5CPfaJTX9Pa0mpFwWW2cJ-cdaFZyQ=",
-            "시바견",
+            R.drawable.banner_02,
+            "배너2",
             "https://myaccount.google.com/?hl=ko&utm_source=OGB&utm_medium=act&pli=1"
         ),
     )
@@ -65,9 +65,6 @@ class HomeFragment : Fragment() {
         val adapter = AdsBannerViewPagerAdapter(requireContext(), items)
         binding.adsViewPager.adapter = adapter
 
-        // 광고 이미지 라운드 처리
-        // adCardView.radius = resources.getDimension(R.dimen.card_corner_radius)
-
         // ViewPager 페이지 변경 리스너 설정
         binding.adsViewPager.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
@@ -77,7 +74,6 @@ class HomeFragment : Fragment() {
             }
         })
 
-        // 5초마다 다음 이미지로 자동 전환
         timer = Timer()
         timer?.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
@@ -133,7 +129,6 @@ class HomeFragment : Fragment() {
                 binding.listContainer.visibility = View.GONE
             }
         }
-
 
         return binding.root
     }

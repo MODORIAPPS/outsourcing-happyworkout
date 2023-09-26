@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 const Channel = ({ user }) => {
 
+    // const hood = "강릉시"
     const hood = window.HappyWorkout.getHood();
 
     const messagesRef = collection(db, `messages-${hood}`);
@@ -52,10 +53,10 @@ const Channel = ({ user }) => {
     };
 
     return (
-        <div>
+        <div className="h-screen">
             <TopBar title="채팅방" />
             <div className="flex flex-col h-full">
-                <div className="overflow-auto h-full">
+                <div className="overflow-auto h-full pb-10">
                     <div className="py-4 max-w-screen-lg mx-auto">
                         <div className="border-b dark:border-gray-600 border-gray-200 py-8 mb-4">
                             <div className="font-bold text-3xl text-center">
@@ -80,11 +81,10 @@ const Channel = ({ user }) => {
                         <div ref={bottomListRef} />
                     </div>
                 </div>
-                <div className="mb-6 mx-4">
+                <div className="fixed bottom-4 w-full px-3">
                     <form
                         onSubmit={handleOnSubmit}
-                        className="flex flex-row bg-gray-200 dark:bg-coolDark-400 rounded-md px-4 py-3 z-10 max-w-screen-lg mx-auto dark:text-white shadow-md"
-                    >
+                        className="flex flex-row bg-gray-200 dark:bg-coolDark-400 rounded-md py-3 px-4 z-10 max-w-screen-lg mx-auto dark:text-white shadow-md">
                         <input
                             ref={inputRef}
                             type="text"

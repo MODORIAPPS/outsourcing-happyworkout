@@ -53,23 +53,24 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         val loginMethod = AuthManager.loadLoginMethod(this)
         val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
+        Log.d(TAG, "loadAuthState: $loginMethod")
         if (loginMethod == "email" && auth.currentUser != null) {
             firestore.collection("users")
                 .whereEqualTo("firebaseUid", auth.currentUser!!.uid)
                 .get()
                 .addOnSuccessListener { documents ->
                     if (documents.size() > 0) {
-                        userViewModel.user.value = User(
+                        userViewModel.user.postValue(User(
                             documents.documents[0].getString("firebaseUid").toString(),
                             documents.documents[0].getString("uid").toString(),
                             documents.documents[0].getString("nickname").toString(),
                             Timestamp.now(),
                             Timestamp.now(),
                             documents.documents[0].getString("profileImageUrl").toString(),
-                        )
+                        ))
                         AuthManager.saveLoginMethod(
                             this,
-                            AuthManager.LOGIN_METHOD_KAKAO
+                            AuthManager.LOGIN_METHOD_EMAIL
                         )
                     } else {
                         startActivity(

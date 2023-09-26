@@ -4,10 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.happy.workout.databinding.ActivityRecordDetailBinding
+import com.happy.workout.viewmodel.UserViewModel
 
 class RecordDetailActivity : AppCompatActivity() {
 
@@ -15,6 +18,9 @@ class RecordDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityRecordDetailBinding.inflate(layoutInflater) }
 
     private lateinit var recordId: String
+    private val userViewModel by lazy {
+        ViewModelProvider(this.application as HappyWorkout)[UserViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +28,9 @@ class RecordDetailActivity : AppCompatActivity() {
 
         val userId = intent.getStringExtra("userId")
         val date = intent.getStringExtra("date")
+        val currentUserId = userViewModel.user.value?.uid
 
-        if (userId == null || date == null) finish()
+        if (userId == null || date == null || currentUserId == null) finish()
 
         Log.d(TAG, "userId: $userId, date: $date")
 
@@ -45,6 +52,9 @@ class RecordDetailActivity : AppCompatActivity() {
                             .load(it)
                             .into(binding.imageView)
                     }
+
+                    val recordUserId = result.documents[0].getString("userId")
+                    if (currentUserId == recordUserId) binding.deleteButton.visibility = View.VISIBLE
                 }
             }
             .addOnFailureListener { exception ->
@@ -64,6 +74,15 @@ class RecordDetailActivity : AppCompatActivity() {
                     Log.w(TAG, "Error getting documents.", exception)
                 }
         }
+
+        setSupportActionBar(binding.toolBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 
 }

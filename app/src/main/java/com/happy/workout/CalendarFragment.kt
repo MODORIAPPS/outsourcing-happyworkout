@@ -175,13 +175,9 @@ class CalendarFragment : Fragment() {
         container.textView.text = day.date.dayOfMonth.toString()
 
         recordBookModal.getRecordData().value?.firstOrNull { it.readOnDate(day.date) }?.let {
+            Log.d(TAG, "imageUrl: ${it.imageUrl}")
             Glide.with(requireContext()).load(it.imageUrl).into(container.imageView)
         } ?: container.imageView.setImageDrawable(null)
-
-//        container.textView.setTextColor(
-//            if (day.position == DayPosition.MonthDate) Color.BLACK
-//            else resources.getColor(R.color.primary)
-//        )
     }
 
     private fun formatDateToyyyyMMdd(originalDateStr: String): String {

@@ -23,6 +23,7 @@ data class LocalRecordListItem(
     fun readOnDate(targetDate: LocalDate): Boolean {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val date1 = LocalDate.parse(date, formatter)
+        Log.d("LocalRecordListItem", "date1: $date1, targetDate: $targetDate")
         return date1.isEqual(targetDate)
     }
 }

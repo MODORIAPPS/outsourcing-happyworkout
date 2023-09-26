@@ -61,7 +61,6 @@ class ChatWebViewActivity : AppCompatActivity() {
                 )
                 binding.webview.loadUrl("${Const.BASE_URL}/chat/${hood}")
                 Log.d(TAG, "onCreate: ${user.firebaseUid}"  )
-
             }
 
         val settings = binding.webview.settings

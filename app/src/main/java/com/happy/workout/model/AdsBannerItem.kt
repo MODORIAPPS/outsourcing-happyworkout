@@ -1,7 +1,7 @@
 package com.happy.workout.model
 
 data class AdsBannerItem(
-    val imageUrl: String,
+    val imageUrl: Int,
     val title: String,
     val href: String
 )
